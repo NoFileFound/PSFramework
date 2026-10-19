@@ -1,0 +1,38 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'org.psframework'
+version = '1.0.0'
+description = 'My private server framework.'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
+}
+
+dependencies {
+    // Json
+    api('com.fasterxml.jackson.core:jackson-databind:2.22.3')
+
+    // Refactor
+    implementation('io.github.classgraph:classgraph:4.8.179')
+
+    // Logging
+    api('org.fusesource.jansi:jansi:2.4.0')
+    api('ch.qos.logback:logback-classic:1.6.3')
+    api('org.slf4j:jul-to-slf4j:2.0.17')
+
+    // Database
+    implementation('dev.morphia.morphia:morphia-core:2.4.14')
+    implementation('com.mysql:mysql-connector-j:9.4.0')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
