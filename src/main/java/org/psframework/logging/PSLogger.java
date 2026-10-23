@@ -47,6 +47,15 @@ public final class PSLogger {
     }
 
     /**
+     * Sends an error message with exception.
+     * @param message The message to send.
+     * @param cause The message's exception to send.
+     */
+    public void error(String message, Throwable cause) {
+        this.logger.error(message, cause);
+    }
+
+    /**
      * Sends a debug message.
      * @param message The message to send.
      * @param args The message's arguments to send.

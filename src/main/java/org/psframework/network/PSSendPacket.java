@@ -1,5 +1,8 @@
 package org.psframework.network;
 
+// Imports
+import org.psframework.utils.PSByteArray;
+
 public abstract class PSSendPacket {
     private final int opcode;
 
@@ -15,14 +18,13 @@ public abstract class PSSendPacket {
      * Gets the packet's id.
      * @return The packet's id.
      */
-    int getOpcode() {
+    public int getOpcode() {
         return this.opcode;
     }
 
     /**
-     * Function to send the packet.
-     * @param data The data to send.
-     * @throws PSSendPacketException Exception if cannot send the data.
+     * Function to build the packet into bytearray.
+     * @throws PSSendPacketException Exception if cannot build the packet.
      */
-    protected abstract void sendPacket(byte[] data) throws PSSendPacketException;
+    public abstract PSByteArray build() throws PSSendPacketException;
 }

@@ -1,22 +1,30 @@
 package org.psframework.game;
 
 // Imports
+import java.util.ArrayList;
 import org.psframework.admin.PSAdminConfig;
 import org.psframework.database.PSDatabase;
 import org.psframework.database.PSDatabaseConfig;
 import org.psframework.database.PSDatabaseFactory;
+import org.psframework.logging.PSLogger;
 
 public abstract class PSGameServer {
+    protected final PSLogger logger;
     protected final PSDatabase database;
-    protected final int port;
+    protected final ArrayList<Integer> ports;
     protected boolean running;
 
     /**
      * Creates a new game server.
+     * @param gamePorts The game server's ports.
+     * @param databaseConfig The database's configuration.
+     * @param adminConfig The admin panel's configuration.
+     * @param logger The game server's logger.
      */
-    protected PSGameServer(int gamePort, PSDatabaseConfig databaseConfig, PSAdminConfig adminConfig) {
-        this.port = gamePort;
+    protected PSGameServer(ArrayList<Integer> gamePorts, PSDatabaseConfig databaseConfig, PSAdminConfig adminConfig, PSLogger logger) {
+        this.ports = gamePorts;
         this.database = PSDatabaseFactory.create(databaseConfig);
+        this.logger = logger;
     }
 
     /**
@@ -38,23 +46,20 @@ public abstract class PSGameServer {
     }
 
     /**
-     * Gets the server database.
-     * @return The server's database.
+     * Gets the server logger.
+     * @return The server's logger.
      */
-    public PSDatabase getDatabase() {
-        return this.database;
-    }
-
-    /**
-     * Gets the server's port.
-     * @return The server's port.
-     */
-    public int getPort() {
-        return this.port;
+    public PSLogger getLogger() {
+        return this.logger;
     }
 
     /**
      * Loads the server's database.
      */
     public abstract void loadDatabase();
+
+    /**
+     * Saves the server's database.
+     */
+    public abstract void saveDatabase();
 }

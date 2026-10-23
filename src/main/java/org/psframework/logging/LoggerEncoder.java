@@ -1,6 +1,7 @@
 package org.psframework.logging;
 
 // Imports
+import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -39,6 +40,12 @@ public class LoggerEncoder extends PatternLayoutEncoder {
 
         String level = levelColor + "[" + event.getLevel() + "]" + Ansi.ansi().reset();
         String msg = Ansi.ansi().fg(Ansi.Color.DEFAULT).a(" " + event.getFormattedMessage()).reset().toString();
-        return timestamp + level + msg + System.lineSeparator();
+        StringBuilder output = new StringBuilder().append(timestamp).append(level).append(msg).append(System.lineSeparator());
+        if (event.getThrowableProxy() != null) {
+            output.append(ThrowableProxyUtil.asString(event.getThrowableProxy()));
+            output.append(System.lineSeparator());
+        }
+
+        return output.toString();
     }
 }

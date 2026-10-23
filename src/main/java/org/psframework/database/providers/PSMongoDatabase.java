@@ -6,6 +6,9 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import java.util.Collections;
@@ -86,5 +89,25 @@ public class PSMongoDatabase implements PSDatabase {
         } catch (Exception exception) {
             return false;
         }
+    }
+
+    /**
+     * Gets the mongodb's url.
+     * @return The mongodb's url.
+     */
+    @Override
+    public String getConnectionUrl() {
+        return String.format("mongodb://%s:%s@%s:%d/%s", this.config.getUsername(), this.config.getPassword(), this.config.getHost(), this.config.getPort(), this.config.getName());
+    }
+
+    /**
+     * Gets the next counter id.
+     * @param variable The variable to count.
+     * @return The next id by variable if exist or else 0.
+     */
+    public int getNextCounterId(String variable) {
+        MongoCollection<Document> counters = this.client.getDatabase(config.getName()).getCollection("counters");
+        Document result = counters.findOneAndUpdate(new Document("_id", variable), new Document("$inc", new Document("sequence", 1)), new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER));
+        return result.getInteger("sequence");
     }
 }
